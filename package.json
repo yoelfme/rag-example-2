@@ -1,0 +1,21 @@
+{
+  "name": "ai-guatemalan-lawyer",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=24"
+  },
+  "scripts": {
+    "ask": "node --env-file-if-exists=.env src/cli.ts ask",
+    "typecheck": "tsc"
+  },
+  "dependencies": {
+    "@langchain/core": "^1.3.0",
+    "@langchain/openai": "^1.7.0",
+    "zod": "^4.6.7"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.5",
+    "typescript": "^7.0.2"
+  }
+}
