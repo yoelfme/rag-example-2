@@ -10,5 +10,26 @@ services:
     volumes:
       - pgdata:/var/lib/postgresql/data
 
+  # Interfaz de chat. Usa nuestra API (pnpm serve, puerto 8000) como si fuera OpenAI.
+  open-webui:
+    image: ghcr.io/open-webui/open-webui:v0.12.3
+    ports:
+      - "3080:8080"
+    environment:
+      OPENAI_API_BASE_URL: http://host.docker.internal:8000/v1
+      OPENAI_API_KEY: not-needed
+      ENABLE_OLLAMA_API: "False"
+      WEBUI_AUTH: "False"
+      ENABLE_PERSISTENT_CONFIG: "False"
+      # Evita llamadas extra al modelo (títulos, tags, sugerencias).
+      ENABLE_TITLE_GENERATION: "False"
+      ENABLE_TAGS_GENERATION: "False"
+      ENABLE_FOLLOW_UP_GENERATION: "False"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    volumes:
+      - openwebui:/app/backend/data
+
 volumes:
   pgdata:
+  openwebui:

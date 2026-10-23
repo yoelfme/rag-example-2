@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI Guatemalan Lawyer · Diagramas</title>
+<style>
+  :root { color-scheme: light dark; --bg: #f7f7f5; --fg: #1d1d1f; --muted: #5f6368; --card: #fff; --line: #e2e2de; --accent: #0f8a5f; }
+  @media (prefers-color-scheme: dark) { :root { --bg: #141416; --fg: #ececec; --muted: #a0a0a8; --card: #1e1e22; --line: #2e2e34; --accent: #3ccf95; } }
+  body { margin: 0; background: var(--bg); color: var(--fg); font: 16px/1.5 system-ui, -apple-system, "Segoe UI", sans-serif; }
+  main { max-width: 760px; margin: 0 auto; padding: 48px 16px; }
+  h1 { margin: 0 0 4px; font-size: 1.8rem; }
+  .lead { color: var(--muted); margin: 0 0 8px; }
+  blockquote { margin: 16px 0 32px; padding: 12px 16px; border-left: 3px solid var(--accent); background: var(--card); border-radius: 0 8px 8px 0; }
+  ol { list-style: none; padding: 0; margin: 0; display: grid; gap: 10px; }
+  a { display: block; padding: 14px 16px; background: var(--card); border: 1px solid var(--line); border-radius: 10px; color: inherit; text-decoration: none; }
+  a:hover, a:focus-visible { border-color: var(--accent); outline: none; }
+  strong { color: var(--accent); font-variant-numeric: tabular-nums; }
+  span { display: block; color: var(--muted); font-size: .92rem; }
+  code { font-size: .88em; }
+</style>
+</head>
+<body>
+<main>
+  <h1>AI Guatemalan Lawyer</h1>
+  <p class="lead">Indexar → Recuperar → Aumentar → Generar, paso a paso.</p>
+  <blockquote>«Me despidieron sin causa justificada después de 3 años. ¿Qué indemnización me corresponde?»</blockquote>
+  <ol>
+    <li><a href="step-0.html"><strong>Paso 0</strong> · Chatbot sin RAG<span>Pregunta → LLM → respuesta: el modelo puede inventar el artículo.</span></a></li>
+    <li><a href="step-1.html"><strong>Paso 1</strong> · Cargar<span>PDFLoader lee <code>data/pdfs/*.pdf</code> y limpia encabezados.</span></a></li>
+    <li><a href="step-2.html"><strong>Paso 2</strong> · Chunking<span>Un artículo = un chunk, con metadata; el Decreto 13-2017 marca <code>in_force: false</code>.</span></a></li>
+    <li><a href="step-3.html"><strong>Paso 3</strong> · Embeddings y base vectorial<span><code>pnpm ingest</code> guarda los vectores en pgvector (<code>law_chunks</code>).</span></a></li>
+    <li><a href="step-4.html"><strong>Paso 4</strong> · Búsqueda semántica<span><code>pnpm search</code> embebe la pregunta y trae los top-k artículos.</span></a></li>
+    <li><a href="step-5.html"><strong>Paso 5</strong> · Búsqueda léxica e híbrida<span>FTS en español + búsqueda semántica, fusionadas con RRF.</span></a></li>
+    <li><a href="step-6.html"><strong>Paso 6</strong> · Filtros por metadatos<span>Ley + <code>in_force = true</code>: el art. 82 del Código Civil queda fuera.</span></a></li>
+    <li><a href="step-7.html"><strong>Paso 7</strong> · Grafo RAG<span>LangGraph: Analizar → Recuperar → Aumentar → Generar, con salto condicional.</span></a></li>
+    <li><a href="step-8.html"><strong>Paso 8</strong> · Open WebUI<span>Navegador → Open WebUI → API Hono OpenAI-compatible → grafo.</span></a></li>
+  </ol>
+</main>
+</body>
+</html>

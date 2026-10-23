@@ -127,3 +127,23 @@ pnpm chat "Me despidieron sin causa..."               # comparación: el chatbot
 
 Archivos: `src/graph/state.ts`, `src/graph/analyze.ts`, `src/graph/retrieve.ts`, `src/graph/generate.ts`,
 `src/graph/graph.ts`, `src/prompts.ts`.
+
+### Paso 8 · Open WebUI (`step-8-open-webui`)
+
+`src/server.ts` expone el grafo como una API compatible con OpenAI (Hono): `GET /v1/models` y
+`POST /v1/chat/completions` con streaming (SSE). Open WebUI la usa como el modelo **AI Guatemalan Lawyer**.
+
+```bash
+docker compose up -d   # postgres + open-webui
+pnpm serve             # API en http://localhost:8000/v1
+open http://localhost:3080
+```
+
+Sin interfaz:
+
+```bash
+curl -N localhost:8000/v1/chat/completions -H 'content-type: application/json' \
+  -d '{"stream": true, "messages": [{"role": "user", "content": "¿Cuántos días de vacaciones me corresponden?"}]}'
+```
+
+Archivos: `src/server.ts`, `docker-compose.yml`.
