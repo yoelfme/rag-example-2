@@ -24,7 +24,7 @@ Cada paso es un tag de git: `git checkout step-N-...`. Los diagramas están en `
 
 ### Paso 0 · Chatbot sin RAG (`step-0-chatbot`)
 
-La pregunta va directo al LLM. Puede inventar el artículo.
+La pregunta va directo al LLM. Puede inventar el artículo (desde el paso 7 este comando es `pnpm chat`).
 
 ```bash
 pnpm ask "Me despidieron sin causa justificada después de 3 años. ¿Qué indemnización me corresponde?"
@@ -109,3 +109,21 @@ pnpm search "artículo 82" --law codigo-trabajo --article 82       # las 3 parte
 ```
 
 Archivos: `src/retrieval/filters.ts` (+ filtro en `semantic.ts`, `lexical.ts`, `hybrid.ts`).
+
+### Paso 7 · Grafo RAG (`step-7-rag-graph`)
+
+Un grafo de LangGraph con tres nodos:
+
+1. **analyze**: structured output con Zod → `needsSearch`, `law`, `article`, `searchQuery`.
+2. **retrieve**: búsqueda híbrida con esos filtros (se salta si `needsSearch` es `false`).
+3. **generate**: prompt aumentado (pregunta + artículos) → respuesta con `Fuente: <ley>, art. N`.
+
+```bash
+pnpm ask "Me despidieron sin causa justificada después de 3 años. ¿Qué indemnización me corresponde?"
+pnpm ask "¿Qué es un contrato de trabajo?"           # no busca
+pnpm ask "¿Qué dice el artículo 82 del Código Civil?" # derogado: no hay evidencia vigente
+pnpm chat "Me despidieron sin causa..."               # comparación: el chatbot sin RAG
+```
+
+Archivos: `src/graph/state.ts`, `src/graph/analyze.ts`, `src/graph/retrieve.ts`, `src/graph/generate.ts`,
+`src/graph/graph.ts`, `src/prompts.ts`.

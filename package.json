@@ -6,6 +6,7 @@
     "node": ">=24"
   },
   "scripts": {
+    "chat": "node --env-file-if-exists=.env src/cli.ts chat",
     "ask": "node --env-file-if-exists=.env src/cli.ts ask",
     "page": "node --env-file-if-exists=.env src/cli.ts page",
     "typecheck": "tsc",
@@ -18,6 +19,7 @@
     "@langchain/classic": "^1.0.55",
     "@langchain/community": "^1.1.29",
     "@langchain/core": "^1.3.0",
+    "@langchain/langgraph": "^1.5.2",
     "@langchain/openai": "^1.7.0",
     "@langchain/textsplitters": "^1.0.2",
     "gray-matter": "^4.0.3",

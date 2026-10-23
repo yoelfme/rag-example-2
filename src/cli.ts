@@ -1,3 +1,5 @@
+import type { AIMessageChunk } from "@langchain/core/messages";
+import { graph } from "./graph/graph.ts";
 import { llm } from "./llm.ts";
 import { cite, getLaw } from "./ingestion/laws.ts";
 import { loadLaw } from "./ingestion/load.ts";
@@ -14,6 +16,23 @@ const [command, ...args] = process.argv.slice(2);
 
 switch (command) {
   case "ask": {
+    // RAG: analyze → retrieve → generate. Muestra cada paso y transmite la respuesta.
+    const stream = await graph.stream({ question: args.join(" ") }, { streamMode: ["updates", "messages"] });
+    for await (const [mode, data] of stream) {
+      if (mode === "updates" && data.analyze) console.log("🔎 Análisis:", data.analyze.analysis, "\n");
+      if (mode === "updates" && data.retrieve) {
+        console.log("📚 Artículos recuperados:");
+        for (const doc of data.retrieve.documents) console.log(`   - ${cite(doc.metadata)}  [${doc.id}]`);
+        console.log();
+      }
+      // Tokens del LLM, solo los del nodo generate (analyze también usa el LLM).
+      if (mode === "messages" && data[1].langgraph_node === "generate") process.stdout.write((data[0] as AIMessageChunk).text);
+    }
+    process.stdout.write("\n");
+    await pool.end();
+    break;
+  }
+  case "chat": {
     // Uso normal: la pregunta va directo al LLM, sin evidencia.
     const stream = await llm.stream(args.join(" "));
     for await (const chunk of stream) process.stdout.write(chunk.text);
@@ -52,5 +71,5 @@ switch (command) {
     break;
   }
   default:
-    console.log('Uso: pnpm ask "pregunta" | pnpm page <ley> <página> | pnpm article <ley> <número> | pnpm search "consulta" [--mode semantic|lexical|hybrid] [--law <ley>] [--article <n>]');
+    console.log('Uso: pnpm ask "pregunta" | pnpm chat "pregunta" | pnpm page <ley> <página> | pnpm article <ley> <número> | pnpm search "consulta" [--mode semantic|lexical|hybrid] [--law <ley>] [--article <n>]');
 }
