@@ -1,6 +1,8 @@
 import { llm } from "./llm.ts";
 import { getLaw } from "./ingestion/laws.ts";
 import { loadLaw } from "./ingestion/load.ts";
+import { chunkLaw } from "./ingestion/chunking.ts";
+import { applyReforms, loadReforms } from "./ingestion/reforms.ts";
 
 const [command, ...args] = process.argv.slice(2);
 
@@ -19,6 +21,13 @@ switch (command) {
     console.log(`${pages.length} páginas cargadas\n`, page);
     break;
   }
+  case "article": {
+    // pnpm article codigo-civil 82
+    const law = getLaw(args[0]);
+    const chunks = applyReforms(await chunkLaw(law, await loadLaw(law)), await loadReforms());
+    console.log(`${chunks.length} chunks\n`, chunks.filter((c) => c.metadata.article === args[1]));
+    break;
+  }
   default:
-    console.log('Uso: pnpm ask "pregunta" | pnpm page <ley> <página>');
+    console.log('Uso: pnpm ask "pregunta" | pnpm page <ley> <página> | pnpm article <ley> <número>');
 }

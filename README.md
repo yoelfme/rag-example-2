@@ -42,3 +42,19 @@ pnpm page codigo-trabajo 31
 ```
 
 Archivos: `src/ingestion/laws.ts`, `src/ingestion/load.ts`.
+
+### Paso 2 · Chunking (`step-2-chunking`)
+
+Chunking estructural: **un artículo = un chunk** (las leyes ya traen su unidad natural).
+Solo los artículos de más de 1500 caracteres se dividen con `RecursiveCharacterTextSplitter`,
+y cada parte conserva el prefijo «Código de Trabajo, artículo 82:».
+
+Las reformas viven en `data/reformas/*.md` (frontmatter) y marcan artículos como `in_force: false`.
+
+```bash
+pnpm article codigo-trabajo 82   # 3 partes, página 36
+pnpm article codigo-civil 82     # in_force: false (Decreto 13-2017)
+pnpm test
+```
+
+Archivos: `src/ingestion/chunking.ts`, `src/ingestion/reforms.ts`, `data/reformas/decreto-13-2017.md`.
