@@ -14,7 +14,7 @@ import { pool } from "./vector-store.ts";
 
 const [command, ...args] = process.argv.slice(2);
 
-// Separador de sección: "━━━ 🔎 ANÁLISIS ━━━━━━…" a lo ancho de la terminal.
+// Separador de sección: "━━━ ANÁLISIS ━━━━━━…" a lo ancho de la terminal.
 function section(title: string) {
   const width = Math.min(process.stdout.columns ?? 80, 100);
   console.log(`\n━━━ ${title} ${"━".repeat(Math.max(3, width - title.length - 6))}\n`);
@@ -27,18 +27,18 @@ switch (command) {
     let answering = false;
     for await (const [mode, data] of stream) {
       if (mode === "updates" && data.analyze) {
-        section("🔎 ANÁLISIS");
+        section("ANÁLISIS");
         console.log(data.analyze.analysis);
       }
       if (mode === "updates" && data.retrieve) {
         const docs = data.retrieve.documents ?? [];
-        section(`📚 ARTÍCULOS RECUPERADOS (${docs.length})`);
+        section(`ARTÍCULOS RECUPERADOS (${docs.length})`);
         for (const doc of docs) console.log(`  - ${cite(doc.metadata)}  [${doc.id}]`);
         if (!docs.length) console.log("  (ningún artículo vigente coincide)");
       }
       // Tokens del LLM, solo los del nodo generate (analyze también usa el LLM).
       if (mode === "messages" && data[1].langgraph_node === "generate") {
-        if (!answering) section("💬 RESPUESTA");
+        if (!answering) section("RESPUESTA");
         answering = true;
         process.stdout.write((data[0] as AIMessageChunk).text);
       }
