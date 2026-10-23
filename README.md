@@ -31,3 +31,14 @@ pnpm ask "Me despidieron sin causa justificada después de 3 años. ¿Qué indem
 ```
 
 Archivos: `src/config.ts`, `src/llm.ts`, `src/cli.ts`.
+
+### Paso 1 · Cargar y limpiar (`step-1-load`)
+
+`PDFLoader` crea un `Document` por página. Quitamos el encabezado repetido y guardamos
+`law` y `page` como metadata para poder citar después.
+
+```bash
+pnpm page codigo-trabajo 31
+```
+
+Archivos: `src/ingestion/laws.ts`, `src/ingestion/load.ts`.

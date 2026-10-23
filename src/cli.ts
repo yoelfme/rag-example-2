@@ -1,13 +1,24 @@
 import { llm } from "./llm.ts";
+import { getLaw } from "./ingestion/laws.ts";
+import { loadLaw } from "./ingestion/load.ts";
 
-const [command, ...rest] = process.argv.slice(2);
-const question = rest.join(" ");
+const [command, ...args] = process.argv.slice(2);
 
-if (command === "ask") {
-  // Uso normal: la pregunta va directo al LLM, sin evidencia.
-  const stream = await llm.stream(question);
-  for await (const chunk of stream) process.stdout.write(chunk.text);
-  process.stdout.write("\n");
-} else {
-  console.log('Uso: pnpm ask "pregunta"');
+switch (command) {
+  case "ask": {
+    // Uso normal: la pregunta va directo al LLM, sin evidencia.
+    const stream = await llm.stream(args.join(" "));
+    for await (const chunk of stream) process.stdout.write(chunk.text);
+    process.stdout.write("\n");
+    break;
+  }
+  case "page": {
+    // pnpm page codigo-trabajo 31
+    const pages = await loadLaw(getLaw(args[0]));
+    const page = pages.find((p) => p.metadata.page === Number(args[1]));
+    console.log(`${pages.length} páginas cargadas\n`, page);
+    break;
+  }
+  default:
+    console.log('Uso: pnpm ask "pregunta" | pnpm page <ley> <página>');
 }
