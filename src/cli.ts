@@ -5,7 +5,8 @@ import { chunkLaw } from "./ingestion/chunking.ts";
 import { applyReforms, loadReforms } from "./ingestion/reforms.ts";
 import { parseArgs } from "node:util";
 import { hybridSearch } from "./retrieval/hybrid.ts";
-import { lexicalRetriever } from "./retrieval/lexical.ts";
+import { LexicalRetriever } from "./retrieval/lexical.ts";
+import type { SearchFilter } from "./retrieval/filters.ts";
 import { semanticRetriever } from "./retrieval/semantic.ts";
 import { pool } from "./vector-store.ts";
 
@@ -34,17 +35,22 @@ switch (command) {
     break;
   }
   case "search": {
-    // pnpm search "me despidieron sin motivo" [--mode semantic|lexical|hybrid]
-    const { values, positionals } = parseArgs({ args, allowPositionals: true, options: { mode: { type: "string", default: "hybrid" } } });
+    // pnpm search "artículo 82" [--mode semantic|lexical|hybrid] [--law codigo-trabajo] [--article 82]
+    const { values, positionals } = parseArgs({
+      args,
+      allowPositionals: true,
+      options: { mode: { type: "string", default: "hybrid" }, law: { type: "string" }, article: { type: "string" } },
+    });
     const query = positionals.join(" ");
+    const filter: SearchFilter = { law: values.law ? getLaw(values.law).id : undefined, article: values.article };
     const docs =
-      values.mode === "semantic" ? await semanticRetriever.invoke(query)
-      : values.mode === "lexical" ? await lexicalRetriever.invoke(query)
-      : await hybridSearch(query);
+      values.mode === "semantic" ? await semanticRetriever(filter).invoke(query)
+      : values.mode === "lexical" ? await new LexicalRetriever(filter).invoke(query)
+      : await hybridSearch(query, filter);
     docs.forEach((doc, i) => console.log(`${i + 1}. ${cite(doc.metadata)}  [${doc.id}]\n   ${doc.pageContent.split("\n")[1]}`));
     await pool.end();
     break;
   }
   default:
-    console.log('Uso: pnpm ask "pregunta" | pnpm page <ley> <página> | pnpm article <ley> <número> | pnpm search "consulta" [--mode semantic|lexical|hybrid]');
+    console.log('Uso: pnpm ask "pregunta" | pnpm page <ley> <página> | pnpm article <ley> <número> | pnpm search "consulta" [--mode semantic|lexical|hybrid] [--law <ley>] [--article <n>]');
 }

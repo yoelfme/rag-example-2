@@ -96,3 +96,16 @@ pnpm search "¿Qué dice el artículo 82?"                  # híbrida (default)
 ```
 
 Archivos: `src/retrieval/lexical.ts`, `src/retrieval/hybrid.ts`.
+
+### Paso 6 · Filtros por metadatos (`step-6-metadata-filters`)
+
+El filtro decide **quién puede entrar**; el ranking, **en qué orden**. Siempre `in_force: true`
+(el art. 82 del Código Civil, derogado, ya no aparece) y opcionalmente ley y artículo.
+
+```bash
+pnpm search "¿Qué dice el artículo 82?" --mode lexical            # sin Civil 82
+pnpm search "¿Qué dice el artículo 82?" --law codigo-trabajo      # solo Código de Trabajo
+pnpm search "artículo 82" --law codigo-trabajo --article 82       # las 3 partes del art. 82
+```
+
+Archivos: `src/retrieval/filters.ts` (+ filtro en `semantic.ts`, `lexical.ts`, `hybrid.ts`).
