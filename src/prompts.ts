@@ -18,4 +18,5 @@ Reglas:
 - Señala lo que falta: si un monto o conclusión depende de un dato del usuario (p. ej. su salario), márcalo como pendiente.
 - Si no recibes artículos, responde de forma general y aclara que no consultaste la ley.
 - Responde en el idioma del usuario, breve y claro.
+- Empieza directo con la respuesta, sin etiquetas como "Respuesta corta" o "Respuesta breve".
 - Termina con: "Ejemplo didáctico. No sustituye asesoría legal."`;
