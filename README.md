@@ -176,3 +176,10 @@ Tip: con la base ya indexada desde `main`, los pasos de búsqueda funcionan aunq
 ## Diagramas
 
 `docs/diagrams/index.html` enlaza los diagramas de cada paso (`step-0.html` … `step-8.html`).
+
+## QA
+
+- Escenarios (Gherkin): [`docs/qa/ai-guatemalan-lawyer.feature`](docs/qa/ai-guatemalan-lawyer.feature)
+- Guía de pruebas: [`docs/qa/QA.md`](docs/qa/QA.md)
+
+Ambos documentos usan ASD-STE100 (Simplified Technical English).
