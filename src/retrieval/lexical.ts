@@ -25,7 +25,9 @@ export class LexicalRetriever extends BaseRetriever {
   }
 
   async _getRelevantDocuments(query: string): Promise<Document[]> {
-    const { rows } = await pool.query(SQL, [query, TOP_K, this.filter]);
-    return rows.map((row) => new Document({ id: row.id, pageContent: row.content, metadata: row.metadata }));
+    // STEP 5a: full-text search en PostgreSQL → Documents.
+    // const { rows } = await pool.query(SQL, [query, TOP_K, this.filter]);
+    // return rows.map((row) => new Document({ id: row.id, pageContent: row.content, metadata: row.metadata }));
+    throw new Error("STEP 5a: descomenta LexicalRetriever en src/retrieval/lexical.ts"); // placeholder: borrar al descomentar
   }
 }

@@ -60,9 +60,10 @@ app.post("/v1/chat/completions", async (c) => {
     const stream = await graph.stream({ question }, { streamMode: ["updates", "messages"] });
     for await (const [mode, data] of stream) {
       if (mode === "updates" && data.retrieve) sources = data.retrieve.documents.map((doc) => cite(doc.metadata));
-      if (mode === "messages" && data[1].langgraph_node === "generate") {
-        await sse.writeSSE({ data: completionChunk((data[0] as AIMessageChunk).text) });
-      }
+      // STEP 8: reenviar cada token del nodo generate como chunk de OpenAI.
+      // if (mode === "messages" && data[1].langgraph_node === "generate") {
+      //   await sse.writeSSE({ data: completionChunk((data[0] as AIMessageChunk).text) });
+      // }
     }
     if (sources.length) {
       const list = [...new Set(sources)].map((s) => `- ${s}`).join("\n");

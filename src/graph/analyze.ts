@@ -6,9 +6,11 @@ import { Analysis, type RagStateType } from "./state.ts";
 const analyzer = llm.withStructuredOutput(Analysis, { name: "analysis" });
 
 export async function analyze(state: RagStateType) {
-  const analysis = await analyzer.invoke([
-    ["system", ANALYZE_PROMPT],
-    ["human", state.question],
-  ]);
-  return { analysis };
+  // STEP 7a: structured output con Zod.
+  // const analysis = await analyzer.invoke([
+  //   ["system", ANALYZE_PROMPT],
+  //   ["human", state.question],
+  // ]);
+  // return { analysis };
+  return { analysis: { needsSearch: true, law: null, article: null, searchQuery: state.question } }; // placeholder: borrar al descomentar
 }

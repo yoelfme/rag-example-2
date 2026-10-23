@@ -17,7 +17,8 @@ for (const law of LAWS) {
   console.log(`${law.name}: ${pages.length} páginas → ${chunks.length} chunks. Generando embeddings...`);
 
   // addDocuments calcula los embeddings y hace INSERT.
-  await vectorStore.addDocuments(chunks, { ids: chunks.map((c) => c.id!) });
+  // STEP 3: embeddings + INSERT en pgvector.
+  // await vectorStore.addDocuments(chunks, { ids: chunks.map((c) => c.id!) });
 }
 
 const { rows } = await pool.query("SELECT count(*) FROM law_chunks");

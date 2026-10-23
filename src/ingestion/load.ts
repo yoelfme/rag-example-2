@@ -7,12 +7,14 @@ const PAGE_HEADER = /^OFICINA NACIONAL DE SERVICIO CIVIL\n\d+\n/;
 
 // Extraer y limpiar: un Document por página, con ley y número de página.
 export async function loadLaw(law: Law): Promise<Document[]> {
-  const pages = await new PDFLoader(law.file).load();
-  return pages.map(
-    (page) =>
-      new Document({
-        pageContent: page.pageContent.replace(PAGE_HEADER, ""),
-        metadata: { law: law.id, page: page.metadata.loc.pageNumber },
-      }),
-  );
+  // STEP 1: PDFLoader → un Document por página; quitar encabezado; guardar ley y página.
+  // const pages = await new PDFLoader(law.file).load();
+  // return pages.map(
+  //   (page) =>
+  //     new Document({
+  //       pageContent: page.pageContent.replace(PAGE_HEADER, ""),
+  //       metadata: { law: law.id, page: page.metadata.loc.pageNumber },
+  //     }),
+  // );
+  throw new Error("STEP 1: descomenta loadLaw en src/ingestion/load.ts"); // placeholder: borrar al descomentar
 }

@@ -16,14 +16,15 @@ export async function loadReforms(): Promise<Reform[]> {
 
 // Marca como no vigentes los artículos derogados.
 export function applyReforms(chunks: Document[], reforms: Reform[]): Document[] {
-  for (const reform of reforms) {
-    for (const chunk of chunks) {
-      const { law, article } = chunk.metadata;
-      if (law === reform.law && reform.articles.includes(article)) {
-        chunk.metadata.in_force = false;
-        chunk.metadata.repealed_by = `Decreto ${reform.decree}`;
-      }
-    }
-  }
+  // STEP 2c: aplicar reformas → in_force: false.
+  // for (const reform of reforms) {
+  //   for (const chunk of chunks) {
+  //     const { law, article } = chunk.metadata;
+  //     if (law === reform.law && reform.articles.includes(article)) {
+  //       chunk.metadata.in_force = false;
+  //       chunk.metadata.repealed_by = `Decreto ${reform.decree}`;
+  //     }
+  //   }
+  // }
   return chunks;
 }

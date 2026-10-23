@@ -19,15 +19,17 @@ export function splitIntoArticles(pages: Document[]): Article[] {
   let current: Article | undefined;
 
   for (const page of pages) {
-    let cursor = 0;
-    for (const match of page.pageContent.matchAll(ARTICLE_HEADING)) {
-      if (current) current.text += page.pageContent.slice(cursor, match.index);
-      current = { article: match[1].toLowerCase(), page: page.metadata.page, text: "" };
-      articles.push(current);
-      cursor = match.index;
-    }
-    // El resto de la página pertenece al artículo abierto (puede seguir en la siguiente).
-    if (current) current.text += page.pageContent.slice(cursor) + "\n";
+    // STEP 2a: cortar en cada "ARTÍCULO N." y recordar la página donde inicia.
+    // let cursor = 0;
+    // for (const match of page.pageContent.matchAll(ARTICLE_HEADING)) {
+    //   if (current) current.text += page.pageContent.slice(cursor, match.index);
+    //   current = { article: match[1].toLowerCase(), page: page.metadata.page, text: "" };
+    //   articles.push(current);
+    //   cursor = match.index;
+    // }
+    // // El resto de la página pertenece al artículo abierto (puede seguir en la siguiente).
+    // if (current) current.text += page.pageContent.slice(cursor) + "\n";
+    throw new Error("STEP 2a: descomenta splitIntoArticles en src/ingestion/chunking.ts"); // placeholder: borrar al descomentar
   }
   return articles.map((a) => ({ ...a, text: a.text.trim() }));
 }
@@ -44,7 +46,9 @@ export async function chunkLaw(law: Law, pages: Document[]): Promise<Document[]>
     seen.set(baseId, count);
     const id = count === 1 ? baseId : `${baseId}-v${count}`;
 
-    const parts = text.length > MAX_CHUNK_SIZE ? await splitter.splitText(text) : [text];
+    // STEP 2b: dividir con el splitter recursivo solo los artículos largos.
+    // const parts = text.length > MAX_CHUNK_SIZE ? await splitter.splitText(text) : [text];
+    const parts = [text]; // placeholder: borrar al descomentar
     parts.forEach((part, i) => {
       chunks.push(
         new Document({

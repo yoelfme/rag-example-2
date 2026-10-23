@@ -11,9 +11,11 @@ export async function generate(state: RagStateType) {
   const context = articles || "Ninguno: no hay artículos vigentes que coincidan (puede estar derogado).";
   const prompt = searched ? `Artículos:\n${context}\n\nPregunta: ${state.question}` : state.question;
 
-  const response = await llm.invoke([
-    ["system", GENERATE_PROMPT],
-    ["human", prompt],
-  ]);
-  return { answer: response.text };
+  // STEP 7c: prompt aumentado → LLM.
+  // const response = await llm.invoke([
+  //   ["system", GENERATE_PROMPT],
+  //   ["human", prompt],
+  // ]);
+  // return { answer: response.text };
+  throw new Error("STEP 7c: descomenta generate en src/graph/generate.ts"); // placeholder: borrar al descomentar
 }
