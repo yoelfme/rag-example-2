@@ -10,7 +10,8 @@
     "page": "node --env-file-if-exists=.env src/cli.ts page",
     "typecheck": "tsc",
     "article": "node --env-file-if-exists=.env src/cli.ts article",
-    "test": "vitest run"
+    "test": "vitest run",
+    "ingest": "node --env-file-if-exists=.env src/ingestion/ingest.ts"
   },
   "dependencies": {
     "@langchain/community": "^1.1.29",
@@ -19,10 +20,12 @@
     "@langchain/textsplitters": "^1.0.2",
     "gray-matter": "^4.0.3",
     "pdf-parse": "^2",
+    "pg": "^8.23.1",
     "zod": "^4.6.7"
   },
   "devDependencies": {
     "@types/node": "^26.6.5",
+    "@types/pg": "^8.23.1",
     "typescript": "^7.0.2",
     "vitest": "^5.0.5"
   }

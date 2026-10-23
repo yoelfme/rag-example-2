@@ -58,3 +58,16 @@ pnpm test
 ```
 
 Archivos: `src/ingestion/chunking.ts`, `src/ingestion/reforms.ts`, `data/reformas/decreto-13-2017.md`.
+
+### Paso 3 · Embeddings y base vectorial (`step-3-embeddings-vectordb`)
+
+Cada chunk se convierte en un vector (`openai/text-embedding-3-small`, 1536 dimensiones)
+y se guarda en PostgreSQL + pgvector junto con su texto y metadata. Tarda ~30 s.
+
+```bash
+pnpm ingest
+docker compose exec postgres psql -U rag -c \
+  "SELECT id, metadata, left(content, 60) FROM law_chunks WHERE id IN ('trabajo-78', 'civil-82');"
+```
+
+Archivos: `src/embeddings.ts`, `src/vector-store.ts`, `src/ingestion/ingest.ts`, `sql/schema.sql`.
