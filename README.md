@@ -147,3 +147,32 @@ curl -N localhost:8000/v1/chat/completions -H 'content-type: application/json' \
 ```
 
 Archivos: `src/server.ts`, `docker-compose.yml`.
+
+## Modo taller (rama `workshop`)
+
+La rama `workshop` tiene el código final con las piezas clave **comentadas**, marcadas con `// STEP n:`.
+Cada bloque tiene una línea `// placeholder: borrar al descomentar` para que la app siga arrancando.
+
+```bash
+git switch workshop
+grep -rn "// STEP" src      # lista los bloques en el orden de las slides
+```
+
+Para cada paso: descomentar el bloque (Cmd+/ en VS Code), borrar el placeholder y correr el comando del paso.
+
+| Marcador | Archivo | Comando para probar |
+|---|---|---|
+| STEP 1 | `src/ingestion/load.ts` | `pnpm page codigo-trabajo 31` |
+| STEP 2a–2c | `chunking.ts`, `reforms.ts` | `pnpm article codigo-civil 82`, `pnpm test` |
+| STEP 3 | `src/ingestion/ingest.ts` | `pnpm ingest` |
+| STEP 4 | `src/retrieval/semantic.ts` | `pnpm search "me despidieron sin motivo"` |
+| STEP 5a–5b | `lexical.ts`, `hybrid.ts` | `pnpm search "artículo 82" --mode lexical` |
+| STEP 6 | `src/retrieval/filters.ts` | `pnpm search "artículo 82" --law codigo-trabajo` |
+| STEP 7a–7c | `src/graph/*.ts` | `pnpm ask "Me despidieron sin causa..."` |
+| STEP 8 | `src/server.ts` | `pnpm serve` + Open WebUI |
+
+Tip: con la base ya indexada desde `main`, los pasos de búsqueda funcionan aunque los pasos 1–3 sigan comentados.
+
+## Diagramas
+
+`docs/diagrams/index.html` enlaza los diagramas de cada paso (`step-0.html` … `step-8.html`).
