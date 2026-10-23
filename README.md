@@ -24,7 +24,7 @@ Cada paso es un tag de git: `git checkout step-N-...`. Los diagramas están en `
 
 ### Paso 0 · Chatbot sin RAG (`step-0-chatbot`)
 
-La pregunta va directo al LLM. Puede inventar el artículo (desde el paso 7 este comando es `pnpm chat`).
+La pregunta va directo al LLM, sin evidencia. Con la pregunta guía suele responder con la ley de **España** (33 días por año) o negarse a citar el artículo. Desde el paso 7 este comando es `pnpm chat`.
 
 ```bash
 pnpm ask "Me despidieron sin causa justificada después de 3 años. ¿Qué indemnización me corresponde?"
