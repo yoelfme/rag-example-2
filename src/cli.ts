@@ -14,21 +14,37 @@ import { pool } from "./vector-store.ts";
 
 const [command, ...args] = process.argv.slice(2);
 
+// Separador de sección: "━━━ 🔎 ANÁLISIS ━━━━━━…" a lo ancho de la terminal.
+function section(title: string) {
+  const width = Math.min(process.stdout.columns ?? 80, 100);
+  console.log(`\n━━━ ${title} ${"━".repeat(Math.max(3, width - title.length - 6))}\n`);
+}
+
 switch (command) {
   case "ask": {
     // RAG: analyze → retrieve → generate. Muestra cada paso y transmite la respuesta.
     const stream = await graph.stream({ question: args.join(" ") }, { streamMode: ["updates", "messages"] });
+    let answering = false;
     for await (const [mode, data] of stream) {
-      if (mode === "updates" && data.analyze) console.log("🔎 Análisis:", data.analyze.analysis, "\n");
+      if (mode === "updates" && data.analyze) {
+        section("🔎 ANÁLISIS");
+        console.log(data.analyze.analysis);
+      }
       if (mode === "updates" && data.retrieve) {
-        console.log("📚 Artículos recuperados:");
-        for (const doc of data.retrieve.documents) console.log(`   - ${cite(doc.metadata)}  [${doc.id}]`);
-        console.log();
+        const docs = data.retrieve.documents ?? [];
+        section(`📚 ARTÍCULOS RECUPERADOS (${docs.length})`);
+        for (const doc of docs) console.log(`  - ${cite(doc.metadata)}  [${doc.id}]`);
+        if (!docs.length) console.log("  (ningún artículo vigente coincide)");
       }
       // Tokens del LLM, solo los del nodo generate (analyze también usa el LLM).
-      if (mode === "messages" && data[1].langgraph_node === "generate") process.stdout.write((data[0] as AIMessageChunk).text);
+      if (mode === "messages" && data[1].langgraph_node === "generate") {
+        if (!answering) section("💬 RESPUESTA");
+        answering = true;
+        process.stdout.write((data[0] as AIMessageChunk).text);
+      }
     }
-    process.stdout.write("\n");
+    if (answering) console.log();
+    section("FIN");
     await pool.end();
     break;
   }

@@ -166,13 +166,13 @@ Expected result: this is a known limit of the semantic search. QA-11 shows the s
 
 1. Run `pnpm ask "¿Qué es un contrato de trabajo?"`.
 2. Make sure that the analysis shows `needsSearch: false`.
-3. Make sure that the output does not show `Artículos recuperados`.
+3. Make sure that the output does not show `ARTÍCULOS RECUPERADOS`.
 
 **QA-18. A question about a repealed article gets no evidence.**
 
 1. Run `pnpm ask "¿Qué dice el artículo 82 del Código Civil?"`.
 2. Make sure that the analysis shows `law: 'codigo-civil'` and `article: '82'`.
-3. Make sure that the list of retrieved articles is empty.
+3. Make sure that the output shows `ARTÍCULOS RECUPERADOS (0)`.
 4. Make sure that the answer does not show the text of the repealed article.
 
 ### Step 8: API and Open WebUI

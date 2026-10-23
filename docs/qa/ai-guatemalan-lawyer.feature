@@ -130,13 +130,13 @@ Feature: AI Guatemalan Lawyer
     Scenario: A general question does not start a search
       When I run 'pnpm ask "¿Qué es un contrato de trabajo?"'
       Then the analysis shows "needsSearch: false"
-      And the output does not show "Artículos recuperados"
+      And the output does not show "ARTÍCULOS RECUPERADOS"
 
     @step-7 @QA-18
     Scenario: A question about a repealed article gets no evidence
       When I run 'pnpm ask "¿Qué dice el artículo 82 del Código Civil?"'
       Then the analysis shows "law: 'codigo-civil'" and "article: '82'"
-      And the list of retrieved articles is empty
+      And the output shows "ARTÍCULOS RECUPERADOS (0)"
       And the answer does not show the text of the repealed article
 
   Rule: Step 8 - The OpenAI-compatible API and Open WebUI give a chat interface
