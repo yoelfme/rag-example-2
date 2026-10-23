@@ -3,6 +3,9 @@ import { cite, getLaw } from "./ingestion/laws.ts";
 import { loadLaw } from "./ingestion/load.ts";
 import { chunkLaw } from "./ingestion/chunking.ts";
 import { applyReforms, loadReforms } from "./ingestion/reforms.ts";
+import { parseArgs } from "node:util";
+import { hybridSearch } from "./retrieval/hybrid.ts";
+import { lexicalRetriever } from "./retrieval/lexical.ts";
 import { semanticRetriever } from "./retrieval/semantic.ts";
 import { pool } from "./vector-store.ts";
 
@@ -31,12 +34,17 @@ switch (command) {
     break;
   }
   case "search": {
-    // pnpm search "me despidieron sin motivo"
-    const docs = await semanticRetriever.invoke(args.join(" "));
+    // pnpm search "me despidieron sin motivo" [--mode semantic|lexical|hybrid]
+    const { values, positionals } = parseArgs({ args, allowPositionals: true, options: { mode: { type: "string", default: "hybrid" } } });
+    const query = positionals.join(" ");
+    const docs =
+      values.mode === "semantic" ? await semanticRetriever.invoke(query)
+      : values.mode === "lexical" ? await lexicalRetriever.invoke(query)
+      : await hybridSearch(query);
     docs.forEach((doc, i) => console.log(`${i + 1}. ${cite(doc.metadata)}  [${doc.id}]\n   ${doc.pageContent.split("\n")[1]}`));
     await pool.end();
     break;
   }
   default:
-    console.log('Uso: pnpm ask "pregunta" | pnpm page <ley> <página> | pnpm article <ley> <número> | pnpm search "consulta"');
+    console.log('Uso: pnpm ask "pregunta" | pnpm page <ley> <página> | pnpm article <ley> <número> | pnpm search "consulta" [--mode semantic|lexical|hybrid]');
 }

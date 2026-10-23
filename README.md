@@ -83,3 +83,16 @@ pnpm search "¿Qué dice el artículo 82?"                              # no lo 
 ```
 
 Archivos: `src/retrieval/semantic.ts`.
+
+### Paso 5 · Búsqueda léxica e híbrida (`step-5-lexical-hybrid`)
+
+- **Léxica**: full-text search de PostgreSQL en español (columna `fts`). Encuentra «artículo 82»…
+  de ambos códigos: no sabe de qué ley.
+- **Híbrida**: `EnsembleRetriever` combina semántica + léxica con Reciprocal Rank Fusion.
+
+```bash
+pnpm search "¿Qué dice el artículo 82?" --mode lexical   # Trabajo 82 y Civil 82
+pnpm search "¿Qué dice el artículo 82?"                  # híbrida (default)
+```
+
+Archivos: `src/retrieval/lexical.ts`, `src/retrieval/hybrid.ts`.
