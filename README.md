@@ -71,3 +71,15 @@ docker compose exec postgres psql -U rag -c \
 ```
 
 Archivos: `src/embeddings.ts`, `src/vector-store.ts`, `src/ingestion/ingest.ts`, `sql/schema.sql`.
+
+### Paso 4 · Búsqueda semántica (`step-4-semantic-search`)
+
+La pregunta se convierte en embedding y pgvector devuelve los `k` chunks más cercanos.
+Encuentra ideas aunque las palabras no coincidan… pero falla con números exactos.
+
+```bash
+pnpm search "¿Me tienen que pagar algo si me despiden sin motivo?"   # arts. 78, 80, 82
+pnpm search "¿Qué dice el artículo 82?"                              # no lo encuentra
+```
+
+Archivos: `src/retrieval/semantic.ts`.

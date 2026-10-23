@@ -1,8 +1,10 @@
 import { llm } from "./llm.ts";
-import { getLaw } from "./ingestion/laws.ts";
+import { cite, getLaw } from "./ingestion/laws.ts";
 import { loadLaw } from "./ingestion/load.ts";
 import { chunkLaw } from "./ingestion/chunking.ts";
 import { applyReforms, loadReforms } from "./ingestion/reforms.ts";
+import { semanticRetriever } from "./retrieval/semantic.ts";
+import { pool } from "./vector-store.ts";
 
 const [command, ...args] = process.argv.slice(2);
 
@@ -28,6 +30,13 @@ switch (command) {
     console.log(`${chunks.length} chunks\n`, chunks.filter((c) => c.metadata.article === args[1]));
     break;
   }
+  case "search": {
+    // pnpm search "me despidieron sin motivo"
+    const docs = await semanticRetriever.invoke(args.join(" "));
+    docs.forEach((doc, i) => console.log(`${i + 1}. ${cite(doc.metadata)}  [${doc.id}]\n   ${doc.pageContent.split("\n")[1]}`));
+    await pool.end();
+    break;
+  }
   default:
-    console.log('Uso: pnpm ask "pregunta" | pnpm page <ley> <página> | pnpm article <ley> <número>');
+    console.log('Uso: pnpm ask "pregunta" | pnpm page <ley> <página> | pnpm article <ley> <número> | pnpm search "consulta"');
 }

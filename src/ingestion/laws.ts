@@ -12,3 +12,8 @@ export function getLaw(id: string): Law {
   if (!law) throw new Error(`Ley desconocida: ${id}. Opciones: ${LAWS.map((l) => l.id).join(", ")}`);
   return law;
 }
+
+// Cita legible de un chunk: "Código de Trabajo, art. 82 (p. 36)".
+export function cite(metadata: Record<string, any>): string {
+  return `${getLaw(metadata.law).name}, art. ${metadata.article} (p. ${metadata.page})`;
+}
